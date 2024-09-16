@@ -2,16 +2,15 @@ package com.example.coms4156restdemo.controller;
 
 import com.example.coms4156restdemo.model.Student;
 import com.example.coms4156restdemo.service.StudentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 
 @RestController
 public class StudentController {
 
-  @Autowired
   private StudentService studentService;
 
   public StudentController(StudentService studentService) {
@@ -24,20 +23,30 @@ public class StudentController {
   }
 
   @GetMapping("/students/{id}")
-  public ResponseEntity<?> getStudent(@PathVariable String id) {
-    return ResponseEntity.ok(new Student("hlxxx", "Robin"));
+  public ResponseEntity<?> getStudent(@PathVariable int id) {
+    Student student = studentService.getStudentById(id);
+    return ResponseEntity.ok(student);
+  }
+
+  @GetMapping("/students/")
+  public ResponseEntity<?> getStudents() {
+    List<Student> students = studentService.getAllStudents();
+    return ResponseEntity.ok(students);
   }
 
   @PostMapping("/students/")
   public ResponseEntity<?> addStudent(@RequestBody Student student) {
-    return ResponseEntity.ok("add student with id xxx");
+    studentService.addStudent(student);
+    return ResponseEntity.ok(student);
   }
   @PutMapping("/students/{id}")
-  public ResponseEntity<?> updateStudent(@PathVariable String id, @RequestBody Student student) {
-    return ResponseEntity.ok("update student with id " + id);
+  public ResponseEntity<?> updateStudent(@PathVariable int id, @RequestBody Student student) {
+    studentService.updateStudent(id, student);
+    return ResponseEntity.ok(student);
   }
   @DeleteMapping("/students/{id}")
-  public ResponseEntity<?> deleteStudent(@PathVariable String id) {
-    return ResponseEntity.ok("delete student with id " + id);
+  public ResponseEntity<?> deleteStudent(@PathVariable int id) {
+    studentService.deleteStudent(id);
+    return ResponseEntity.ok().build();
   }
 }
